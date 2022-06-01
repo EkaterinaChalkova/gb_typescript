@@ -1,27 +1,31 @@
-import { renderBlock } from "./lib.js";
+import { renderBlock } from './lib.js';
+
+export function test() {
+  console.log('test');
+}
 
 export function renderSearchFormBlock(
   checkIn: string = null,
   checkOut: string = null
 ) {
   const TODAY = new Date();
-  let minDate = TODAY.toISOString().slice(0, 10);
-  let maxDate = new Date(TODAY.getFullYear(), TODAY.getMonth() + 2, 1)
+  const minDate = TODAY.toISOString().slice(0, 10);
+  const maxDate = new Date(TODAY.getFullYear(), TODAY.getMonth() + 2, 1)
     .toISOString()
     .slice(0, 10);
 
-  let checkInDate = new Date();
+  const checkInDate = new Date();
   checkInDate.setDate(checkInDate.getDate() + 1);
-  let checkInDateString = checkInDate.toISOString().slice(0, 10);
+  const checkInDateString = checkInDate.toISOString().slice(0, 10);
 
-  let checkOutDate = new Date();
-  checkOutDate.setDate(checkInDate.getDate() + 2);
-  let checkOutDateString = checkOutDate.toISOString().slice(0, 10);
+  const checkOutDate = new Date();
+  checkOutDate.setDate(checkOutDate.getDate() + 3);
+  const checkOutDateString = checkOutDate.toISOString().slice(0, 10);
 
   renderBlock(
-    "search-form-block",
+    'search-form-block',
     `
-    <form>
+    <form id="search-block" name="search-block">
       <fieldset class="search-filedset">
         <div class="row">
           <div>
