@@ -4,19 +4,20 @@ export function renderSearchFormBlock(
   checkIn: string = null,
   checkOut: string = null
 ) {
+  function dayOffset(offset: number): string {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + offset);
+    return currentDate.toISOString().slice(0, 10);
+  }
+
   const TODAY = new Date();
-  let minDate = TODAY.toISOString().slice(0, 10);
-  let maxDate = new Date(TODAY.getFullYear(), TODAY.getMonth() + 2, 1)
+  const minDate = TODAY.toISOString().slice(0, 10);
+  const maxDate = new Date(TODAY.getFullYear(), TODAY.getMonth() + 2, 1)
     .toISOString()
     .slice(0, 10);
 
-  let checkInDate = new Date();
-  checkInDate.setDate(checkInDate.getDate() + 1);
-  let checkInDateString = checkInDate.toISOString().slice(0, 10);
-
-  let checkOutDate = new Date();
-  checkOutDate.setDate(checkInDate.getDate() + 2);
-  let checkOutDateString = checkOutDate.toISOString().slice(0, 10);
+  const checkInDateString = dayOffset(1);
+  const checkOutDateString = dayOffset(3);
 
   renderBlock(
     "search-form-block",
