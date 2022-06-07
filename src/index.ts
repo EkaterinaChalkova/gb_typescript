@@ -1,10 +1,10 @@
-import { renderSearchFormBlock } from './search-form.js';
-import { renderSearchStubBlock } from './search-results.js';
-import { renderUserBlock, getFavoritesAmount, getUserData } from './user.js';
-import { renderToast } from './lib.js';
-import { search } from './search-form-action.js';
+import { renderSearchFormBlock } from "./search-form.js";
+import { renderSearchStubBlock } from "./search-results.js";
+import { renderUserBlock, getFavoritesAmount, getUserData } from "./user.js";
+import { renderToast } from "./lib.js";
+import { search } from "./search-form-action.js";
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener("DOMContentLoaded", () => {
   const user = getUserData();
   const favorites = getFavoritesAmount();
   renderUserBlock(user.username, user.avatarUrl, favorites);
@@ -12,13 +12,13 @@ window.addEventListener('DOMContentLoaded', () => {
   renderSearchStubBlock();
   renderToast(
     {
-      text: 'Это пример уведомления. Используйте его при необходимости',
-      type: 'success',
+      text: "Это пример уведомления. Используйте его при необходимости",
+      type: "success",
     },
     {
-      name: 'Понял',
+      name: "Понял",
       handler: () => {
-        console.log('Уведомление закрыто');
+        console.log("Уведомление закрыто");
       },
     }
   );
