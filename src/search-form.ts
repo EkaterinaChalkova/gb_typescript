@@ -1,5 +1,9 @@
 import { renderBlock } from "./lib.js";
 
+export function test() {
+  console.log("test");
+}
+
 export function renderSearchFormBlock(
   checkIn: string = null,
   checkOut: string = null
@@ -22,7 +26,7 @@ export function renderSearchFormBlock(
   renderBlock(
     "search-form-block",
     `
-    <form>
+    <form id="search-block" name="search-block">
       <fieldset class="search-filedset">
         <div class="row">
           <div>
