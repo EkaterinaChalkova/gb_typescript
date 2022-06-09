@@ -15,19 +15,35 @@ export function getUserData(): { username: string; avatarUrl: string } {
   }
 }
 
-export function getFavoritesAmount(): number {
-  const request = +localStorage.getItem("favoritesAmount");
-  if (typeof request === "number") {
-    return request;
+// export function getFavoritesAmount(): number {
+//   const request = +localStorage.getItem("favoritesAmount");
+//   if (typeof request === "number") {
+//     return request;
+//   }
+//   return 0;
+// }
+
+export function getFavoritesAmount(key = "favoriteItems"): number {
+  const localStorageItem = localStorage.getItem(key);
+
+  if (localStorageItem === null) {
+    return;
   }
-  return 0;
+
+  const data: unknown = JSON.parse(localStorageItem);
+
+  if (Array.isArray(data)) {
+    return data.length;
+  }
+
+  return;
 }
 
-export function renderUserBlock(
-  userName: string,
-  userAvatarLink: string,
-  favoriteItemsAmount?: number
-) {
+export function renderUserBlock() {
+  const user = getUserData();
+  const userName = user.username;
+  const userAvatarLink = user.avatarUrl;
+  const favoriteItemsAmount = getFavoritesAmount();
   const favoritesCaption =
     favoriteItemsAmount > 0 ? favoriteItemsAmount : "ничего нет";
   const hasFavoriteItems = favoriteItemsAmount > 0 ? true : false;
