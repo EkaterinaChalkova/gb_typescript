@@ -41,7 +41,7 @@ export function makeListContent(places: Place[]) {
   }
 
   places.forEach((place) => {
-    const favoriteItem = favoriteItems.find((item) => item.id === place.id);
+    const favoriteItem = favoriteItems.find((item) => item.id == place.id);
     let isFavorite: boolean;
     if (favoriteItem) {
       isFavorite = true;

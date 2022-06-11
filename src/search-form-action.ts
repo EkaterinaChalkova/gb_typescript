@@ -5,7 +5,7 @@ import {
   renderSearchResultsBlock,
 } from "./search-results.js";
 import { FavoritePlace } from "./types.js";
-
+import { FlatRentSdk } from "./flat-rent-sdk.js";
 import { renderUserBlock } from "./user.js";
 
 export function toggleFavoriteItem(e: Event): void {
@@ -13,7 +13,8 @@ export function toggleFavoriteItem(e: Event): void {
     return;
   }
 
-  const id = Number(e.currentTarget.dataset.id);
+  // const id = Number(e.currentTarget.dataset.id);
+  const id = e.currentTarget.dataset.id;
   const name = e.currentTarget.dataset.name;
   const image = e.currentTarget.nextElementSibling.getAttribute("src");
   const currentPlace: FavoritePlace = {
@@ -28,7 +29,7 @@ export function toggleFavoriteItem(e: Event): void {
     const favoriteItems: unknown = JSON.parse(localStorageItem);
 
     if (Array.isArray(favoriteItems)) {
-      const favoriteItem = favoriteItems.find((item) => item.id === id);
+      const favoriteItem = favoriteItems.find((item) => item.id == id);
 
       if (favoriteItem) {
         removeFavoriteItemFromStorage(favoriteItem, favoriteItems);
@@ -80,6 +81,42 @@ export const showSearchResult: searchCallback = (error, result): void => {
     renderEmptyOrErrorSearchBlock(error);
   }
 };
+
+export function searchFunctionFlatRent(
+  reqData: SearchFormData,
+  callback: searchCallback
+) {
+  const buttons = document.querySelectorAll(".favorites");
+  buttons.forEach((button) => {
+    button.removeEventListener("click", toggleFavoriteItem);
+  });
+  const sdk = new FlatRentSdk();
+  const sdkData = {
+    city: reqData.city,
+    checkInDate: reqData.checkInDate,
+    checkOutDate: reqData.checkOutDate,
+    priceLimit: reqData.maxPrice,
+  };
+  sdk.search(sdkData).then((data) => {
+    const sdkResult = data;
+    const result = sdkResult.map((e) => ({
+      id: e.id,
+      name: e.title,
+      description: e.details,
+      image: e.photos[0].replace(/http:\/\/localhost:3040/, ""),
+      remoteness: 0,
+      bookedDates: e.bookedDates.map((b) => dateToUnixStamp(b)),
+      price: e.totalPrice,
+    }));
+    if (result.length) {
+      callback(null, result);
+    } else {
+      callback("Ничего не найдено. Попробуйте изменить параметры поиска.");
+    }
+  });
+
+  // console.log(result);
+}
 
 export async function searchFunction(
   reqData: SearchFormData,
@@ -136,6 +173,12 @@ export function search() {
       ),
       maxPrice: +document.forms["search-block"].elements["max-price"].value,
     };
-    searchFunction(searchData, showSearchResult);
+    const provider: string =
+      document.forms["search-block"].elements["provider"].value;
+    if (provider == "flat-rent") {
+      searchFunctionFlatRent(searchData, showSearchResult);
+    } else {
+      searchFunction(searchData, showSearchResult);
+    }
   };
 }
