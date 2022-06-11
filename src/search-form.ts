@@ -34,10 +34,13 @@ export function renderSearchFormBlock(
             <input id="city" type="text" disabled value="Санкт-Петербург" />
             <input type="hidden" disabled value="59.9386,30.3141" />
           </div>
-          <!--<div class="providers">
-            <label><input type="checkbox" name="provider" value="homy" checked /> Homy</label>
-            <label><input type="checkbox" name="provider" value="flat-rent" checked /> FlatRent</label>
-          </div>--!>
+          <div>
+            <label for="provider">Постаавщик услуг:</label>
+            <select name="provider" id="provider">
+              <option deafult value="flat-rent">FlatRent</option>
+              <option value="homy">Homy</option>
+            </select>
+          </div>
         </div>
         <div class="row">
           <div>
