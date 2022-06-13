@@ -5,8 +5,8 @@ import {
   renderSearchResultsBlock,
 } from "./search-results.js";
 import { FavoritePlace } from "./types.js";
-import { FlatRentSdk } from "./flat-rent-sdk.js";
 import { renderUserBlock } from "./user.js";
+import { API } from "./dataAPI.js";
 
 export function toggleFavoriteItem(e: Event): void {
   if (!(e.currentTarget instanceof HTMLDivElement)) {
@@ -82,86 +82,13 @@ export const showSearchResult: searchCallback = (error, result): void => {
   }
 };
 
-export function searchFunctionFlatRent(
-  reqData: SearchFormData,
-  callback: searchCallback
-) {
-  const buttons = document.querySelectorAll(".favorites");
-  buttons.forEach((button) => {
-    button.removeEventListener("click", toggleFavoriteItem);
-  });
-  const sdk = new FlatRentSdk();
-  const sdkData = {
-    city: reqData.city,
-    checkInDate: reqData.checkInDate,
-    checkOutDate: reqData.checkOutDate,
-    priceLimit: reqData.maxPrice,
-  };
-  sdk.search(sdkData).then((data) => {
-    const sdkResult = data;
-    const result = sdkResult.map((e) => ({
-      id: e.id,
-      name: e.title,
-      description: e.details,
-      image: e.photos[0].replace(/http:\/\/localhost:3040/, ""),
-      remoteness: 0,
-      bookedDates: e.bookedDates.map((b) => dateToUnixStamp(b)),
-      price: e.totalPrice,
-    }));
-    if (result.length) {
-      callback(null, result);
-    } else {
-      callback("Ничего не найдено. Попробуйте изменить параметры поиска.");
-    }
-  });
-
-  // console.log(result);
-}
-
-export async function searchFunction(
-  reqData: SearchFormData,
-  callback: searchCallback
-) {
-  const buttons = document.querySelectorAll(".favorites");
-  buttons.forEach((button) => {
-    button.removeEventListener("click", toggleFavoriteItem);
-  });
-
-  let url =
-    "http://localhost:3030/places?" +
-    `checkInDate=${dateToUnixStamp(reqData.checkInDate)}&` +
-    `checkOutDate=${dateToUnixStamp(reqData.checkOutDate)}&` +
-    "coordinates=59.9386,30.3141";
-
-  if (reqData.maxPrice != null) {
-    url += `&maxPrice=${reqData.maxPrice}`;
-  }
-
-  try {
-    const response = await fetch(url);
-    const result = await response.json();
-
-    if (response.status === 200) {
-      if (result.length) {
-        callback(null, result);
-      } else {
-        callback("Ничего не найдено. Попробуйте изменить параметры поиска.");
-      }
-    } else {
-      callback(result.message);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 export function dateToUnixStamp(date: Date) {
   return date.getTime() / 1000;
 }
 
 export function search() {
   const form = document.getElementById("search-block");
-  form.onsubmit = function () {
+  form.onsubmit = async function () {
     event.preventDefault();
     const searchData: SearchFormData = {
       city: document.forms["search-block"].elements["city"].value,
@@ -175,10 +102,14 @@ export function search() {
     };
     const provider: string =
       document.forms["search-block"].elements["provider"].value;
-    if (provider == "flat-rent") {
-      searchFunctionFlatRent(searchData, showSearchResult);
+    const api = new API();
+    const data = await api.get(searchData, provider);
+    if (data.length) {
+      showSearchResult(null, data);
     } else {
-      searchFunction(searchData, showSearchResult);
+      showSearchResult(
+        "Ничего не найдено. Попробуйте изменить параметры поиска."
+      );
     }
   };
 }
