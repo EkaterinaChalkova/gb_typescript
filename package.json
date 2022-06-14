@@ -1,6 +1,6 @@
 {
   "name": "gbts",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "scripts": {
     "build": "rd -r public\\scripts 2>null & tsc",
     "build:dev": "rd -r public\\scripts 2>null & tsc -p tsconfig-dev.json ",
