@@ -1,11 +1,14 @@
 export function renderBlock(elementId: string, html: string) {
   const element = document.getElementById(elementId);
-  element.innerHTML = html;
+  if (element) element.innerHTML = html;
 }
 
 export function renderToast(
-  message: { text: string; type: string },
-  action: any
+  message: { text: string; type: string } | null,
+  action: {
+    name: string;
+    handler(): void;
+  } | null
 ) {
   let messageText = "";
 
