@@ -26,9 +26,9 @@ export function renderEmptyOrErrorSearchBlock(reasonMessage: string) {
 }
 
 export function makeListContent(places: Place[]) {
-  const items = [];
+  const items: string[] = [];
   const localStorageItem = localStorage.getItem("favoriteItems");
-  let favoriteItems = [];
+  let favoriteItems: Place[] = [];
   if (localStorageItem) {
     const localStorageData: unknown = JSON.parse(localStorageItem);
     if (Array.isArray(localStorageData)) {
@@ -55,11 +55,11 @@ export function makeListContent(places: Place[]) {
         <div class="result-container">
           <div class="result-img-container">
             <div class="favorites ${isFavorite ? " active" : ""}" data-id="${
-  place.id
-}" data-name="${place.name}" data-image="${place.image}"></div>
+        place.id
+      }" data-name="${place.name}" data-image="${place.image}"></div>
             <img class="result-img" src="${place.image}" alt="${
-  place.name
-} hotel" width="225" height="225">
+        place.name
+      } hotel" width="225" height="225">
           </div>	
           <div class="result-info">
             <div class="result-info--header">
@@ -67,8 +67,8 @@ export function makeListContent(places: Place[]) {
               <p class="price">${place.price}&#8381;</p>
             </div>
             <div class="result-info--map"><i class="map-icon"></i>${
-  place.remoteness
-} км от вас</div>
+              place.remoteness
+            } км от вас</div>
             <div class="result-info--descr">${place.description}</div>
             <div class="result-info--footer">
               <div>
@@ -81,7 +81,7 @@ export function makeListContent(places: Place[]) {
     );
   });
 
-  return "<ul class=\"results-list\">" + items.join("") + "\n</ul>";
+  return '<ul class="results-list">' + items.join("") + "\n</ul>";
 }
 
 export function renderSearchResultsBlock(listContent: string) {

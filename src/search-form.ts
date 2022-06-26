@@ -4,10 +4,7 @@ export function test() {
   console.log("test");
 }
 
-export function renderSearchFormBlock(
-  checkIn: string = null,
-  checkOut: string = null
-) {
+export function renderSearchFormBlock() {
   function dayOffset(offset: number): string {
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() + offset);
